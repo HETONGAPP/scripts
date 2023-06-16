@@ -4,7 +4,7 @@
 /cmake_install.cmake
 /install_manifest.txt
 receiver2
-
+.vscode
 calibration
 
 receiver
