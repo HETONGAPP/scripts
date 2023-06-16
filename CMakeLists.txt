@@ -26,6 +26,9 @@ set(CMAKE_BUILD_TYPE "Debug")
 find_package(OpenCV REQUIRED)
 find_package(X11 REQUIRED)
 find_package(realsense2 REQUIRED)
+find_package(PCL REQUIRED COMPONENTS common io filters)
+find_package(Eigen3 3.3.7 REQUIRED) # this version may not fit  each devices, please switch the right wevsion 
+
 pkg_check_modules(PC_ZeroMQ QUIET zmq)
 
 ## use the hint from above to find where 'zmq.hpp' is located
@@ -46,6 +49,7 @@ find_library(ZeroMQ_LIBRARY
 
 include_directories(
         ${OpenCV_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIR}
 )
 
 
@@ -66,6 +70,11 @@ set(SOURCES3
 
 )
 
+set(SOURCES4
+  pcl_sender.cpp
+
+)
+
 
 add_executable(${PROJECT_NAME} ${SOURCES})
 
@@ -80,6 +89,9 @@ target_link_libraries(${PROJECT_NAME}
   ${X11_LIBRARIES}
   dl
   ${ZeroMQ_LIBRARY}
+  ${PCL_LIBRARIES}
+  ${EIGEN3_LIBS}
+
 )
 
 add_executable(receiver ${SOURCES1})
@@ -95,6 +107,9 @@ target_link_libraries(receiver
   ${X11_LIBRARIES}
   dl
   ${ZeroMQ_LIBRARY}
+  ${PCL_LIBRARIES}
+  ${EIGEN3_LIBS}
+
 )
 
 
@@ -111,6 +126,9 @@ target_link_libraries(receiver2
   ${X11_LIBRARIES}
   dl
   ${ZeroMQ_LIBRARY}
+  ${PCL_LIBRARIES}
+  ${EIGEN3_LIBS}
+
 )
 
 
@@ -127,6 +145,28 @@ target_link_libraries(calibration
   ${X11_LIBRARIES}
   dl
   ${ZeroMQ_LIBRARY}
+  ${PCL_LIBRARIES}
+  ${EIGEN3_LIBS}
+
+)
+
+
+add_executable(pcl_sender ${SOURCES4})
+
+target_include_directories(pcl_sender
+  PUBLIC ${ZeroMQ_INCLUDE_DIR}
+)
+
+target_link_libraries(pcl_sender
+  ${OpenCV_LIBS}
+  ${realsense2_LIBRARY}
+  realsense2::realsense2
+  ${X11_LIBRARIES}
+  dl
+  ${ZeroMQ_LIBRARY}
+  ${PCL_LIBRARIES}
+  ${EIGEN3_LIBS}
+
 )
 
 
