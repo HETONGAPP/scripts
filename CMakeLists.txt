@@ -28,6 +28,7 @@ find_package(X11 REQUIRED)
 find_package(realsense2 REQUIRED)
 find_package(PCL REQUIRED COMPONENTS common io filters)
 find_package(Eigen3 3.3.7 REQUIRED) # this version may not fit  each devices, please switch the right wevsion 
+find_package(nlohmann_json 3.2.0  REQUIRED)
 
 pkg_check_modules(PC_ZeroMQ QUIET zmq)
 
@@ -163,6 +164,7 @@ target_link_libraries(pcl_sender
   realsense2::realsense2
   ${X11_LIBRARIES}
   dl
+  nlohmann_json::nlohmann_json
   ${ZeroMQ_LIBRARY}
   ${PCL_LIBRARIES}
   ${EIGEN3_LIBS}

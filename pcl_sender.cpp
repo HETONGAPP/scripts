@@ -1,9 +1,8 @@
 #include <Eigen/Dense>
+#include <chrono>
 #include <iostream>
 #include <librealsense2/rs.hpp>
-#include <vector>
-
-#include <chrono>
+#include <nlohmann/json.hpp>
 #include <opencv2/highgui.hpp>
 #include <pcl/filters/filter.h>
 #include <pcl/filters/passthrough.h>
@@ -15,6 +14,8 @@
 #include <pcl/point_types.h>
 #include <pcl/sample_consensus/ransac.h>
 #include <pcl/visualization/cloud_viewer.h>
+#include <vector>
+#include <zmq.hpp>
 
 using PointT = pcl::PointXYZRGB;
 using PointCloudT = pcl::PointCloud<PointT>;
@@ -102,6 +103,10 @@ cloud_pointer PCL_Conversion(const rs2::points &points,
 }
 
 int main() {
+
+  zmq::context_t context(1);
+  zmq::socket_t publisher(context, ZMQ_PUB);
+  publisher.bind("tcp://*:5558");
   // Create a RealSense pipeline
   rs2::pipeline pipeline;
   rs2::config config;
@@ -172,12 +177,19 @@ int main() {
 
       // cloud->swap(*cloud_downsampled);
     }
+    nlohmann::json json_obj;
     for (auto point : cloud_downsampled->points) {
-      Eigen::Vector3f vector3f(point.x, point.y, point.z);
-      pointCloud.push_back(vector3f);
+      nlohmann::json point_obj;
+      point_obj["x"] = point.x;
+      point_obj["y"] = point.y;
+      point_obj["z"] = point.z;
+      json_obj.push_back(point_obj);
     }
-
-    std::cout << pointCloud.size() << std::endl;
+    std::string json_str = json_obj.dump();
+    std::cout << json_str << std::endl;
+    zmq::message_t message(json_str.size());
+    memcpy(message.data(), json_str.data(), json_str.size());
+    publisher.send(message);
   }
 
   // Stop the pipeline and release resources
