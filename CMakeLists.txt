@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ivero_backend_server_test)
+project(ivero_rgb)
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release)
@@ -58,18 +58,18 @@ include_directories(
 set(SOURCES
     sender.cpp
 )
-set(SOURCES1
-  reciever.cpp
-)
+# set(SOURCES1
+#   reciever.cpp
+# )
 
-set(SOURCES2
-  reciever.cpp
-)
+# set(SOURCES2
+#   reciever.cpp
+# )
 
-set(SOURCES3
-  calibration.cpp
+# set(SOURCES3
+#   calibration.cpp
 
-)
+# )
 
 set(SOURCES4
   pcl_sender.cpp
@@ -95,70 +95,70 @@ target_link_libraries(${PROJECT_NAME}
 
 )
 
-add_executable(receiver ${SOURCES1})
+# add_executable(receiver ${SOURCES1})
 
-target_include_directories(receiver
+# target_include_directories(receiver
+#   PUBLIC ${ZeroMQ_INCLUDE_DIR}
+# )
+
+# target_link_libraries(receiver
+#   ${OpenCV_LIBS}
+#   ${realsense2_LIBRARY}
+#   realsense2::realsense2
+#   ${X11_LIBRARIES}
+#   dl
+#   ${ZeroMQ_LIBRARY}
+#   ${PCL_LIBRARIES}
+#   ${EIGEN3_LIBS}
+
+# )
+
+
+# add_executable(receiver2 ${SOURCES2})
+
+# target_include_directories(receiver2
+#   PUBLIC ${ZeroMQ_INCLUDE_DIR}
+# )
+
+# target_link_libraries(receiver2
+#   ${OpenCV_LIBS}
+#   ${realsense2_LIBRARY}
+#   realsense2::realsense2
+#   ${X11_LIBRARIES}
+#   dl
+#   ${ZeroMQ_LIBRARY}
+#   ${PCL_LIBRARIES}
+#   ${EIGEN3_LIBS}
+
+# )
+
+
+# add_executable(calibration ${SOURCES3})
+
+# target_include_directories(calibration
+#   PUBLIC ${ZeroMQ_INCLUDE_DIR}
+# )
+
+# target_link_libraries(calibration
+#   ${OpenCV_LIBS}
+#   ${realsense2_LIBRARY}
+#   realsense2::realsense2
+#   ${X11_LIBRARIES}
+#   dl
+#   ${ZeroMQ_LIBRARY}
+#   ${PCL_LIBRARIES}
+#   ${EIGEN3_LIBS}
+
+# )
+
+
+add_executable(ivero_pcl ${SOURCES4})
+
+target_include_directories(ivero_pcl
   PUBLIC ${ZeroMQ_INCLUDE_DIR}
 )
 
-target_link_libraries(receiver
-  ${OpenCV_LIBS}
-  ${realsense2_LIBRARY}
-  realsense2::realsense2
-  ${X11_LIBRARIES}
-  dl
-  ${ZeroMQ_LIBRARY}
-  ${PCL_LIBRARIES}
-  ${EIGEN3_LIBS}
-
-)
-
-
-add_executable(receiver2 ${SOURCES2})
-
-target_include_directories(receiver2
-  PUBLIC ${ZeroMQ_INCLUDE_DIR}
-)
-
-target_link_libraries(receiver2
-  ${OpenCV_LIBS}
-  ${realsense2_LIBRARY}
-  realsense2::realsense2
-  ${X11_LIBRARIES}
-  dl
-  ${ZeroMQ_LIBRARY}
-  ${PCL_LIBRARIES}
-  ${EIGEN3_LIBS}
-
-)
-
-
-add_executable(calibration ${SOURCES3})
-
-target_include_directories(calibration
-  PUBLIC ${ZeroMQ_INCLUDE_DIR}
-)
-
-target_link_libraries(calibration
-  ${OpenCV_LIBS}
-  ${realsense2_LIBRARY}
-  realsense2::realsense2
-  ${X11_LIBRARIES}
-  dl
-  ${ZeroMQ_LIBRARY}
-  ${PCL_LIBRARIES}
-  ${EIGEN3_LIBS}
-
-)
-
-
-add_executable(pcl_sender ${SOURCES4})
-
-target_include_directories(pcl_sender
-  PUBLIC ${ZeroMQ_INCLUDE_DIR}
-)
-
-target_link_libraries(pcl_sender
+target_link_libraries(ivero_pcl
   ${OpenCV_LIBS}
   ${realsense2_LIBRARY}
   realsense2::realsense2

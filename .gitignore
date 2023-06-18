@@ -3,10 +3,10 @@
 /Makefile
 /cmake_install.cmake
 /install_manifest.txt
-receiver2
+ivero_pcl
+ivero_rgb
 .vscode
-calibration
 
-receiver
 
-ivero_backend_server_test
+
+
