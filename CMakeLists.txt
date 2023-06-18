@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5)
-project(ivero_rgb)
+project(ivero_publisher)
 
 IF(NOT CMAKE_BUILD_TYPE)
   SET(CMAKE_BUILD_TYPE Release)
@@ -49,130 +49,28 @@ find_library(ZeroMQ_LIBRARY
 ###########
 
 include_directories(
-        ${OpenCV_INCLUDE_DIRS}
-        ${EIGEN3_INCLUDE_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}/include/
+    ${OpenCV_INCLUDE_DIRS}
+    ${EIGEN3_INCLUDE_DIR}
 )
 
-
-
-set(SOURCES
-    sender.cpp
-)
-# set(SOURCES1
-#   reciever.cpp
-# )
-
-# set(SOURCES2
-#   reciever.cpp
-# )
-
-# set(SOURCES3
-#   calibration.cpp
-
-# )
-
-set(SOURCES4
-  pcl_sender.cpp
-
-)
-
-
-add_executable(${PROJECT_NAME} ${SOURCES})
+add_executable(${PROJECT_NAME} src/ivero_publisher.cpp)
 
 target_include_directories(${PROJECT_NAME}
   PUBLIC ${ZeroMQ_INCLUDE_DIR}
 )
 
 target_link_libraries(${PROJECT_NAME}
-  ${OpenCV_LIBS}
-  ${realsense2_LIBRARY}
+  dl  
   realsense2::realsense2
-  ${X11_LIBRARIES}
-  dl
-  ${ZeroMQ_LIBRARY}
-  ${PCL_LIBRARIES}
-  ${EIGEN3_LIBS}
-
-)
-
-# add_executable(receiver ${SOURCES1})
-
-# target_include_directories(receiver
-#   PUBLIC ${ZeroMQ_INCLUDE_DIR}
-# )
-
-# target_link_libraries(receiver
-#   ${OpenCV_LIBS}
-#   ${realsense2_LIBRARY}
-#   realsense2::realsense2
-#   ${X11_LIBRARIES}
-#   dl
-#   ${ZeroMQ_LIBRARY}
-#   ${PCL_LIBRARIES}
-#   ${EIGEN3_LIBS}
-
-# )
-
-
-# add_executable(receiver2 ${SOURCES2})
-
-# target_include_directories(receiver2
-#   PUBLIC ${ZeroMQ_INCLUDE_DIR}
-# )
-
-# target_link_libraries(receiver2
-#   ${OpenCV_LIBS}
-#   ${realsense2_LIBRARY}
-#   realsense2::realsense2
-#   ${X11_LIBRARIES}
-#   dl
-#   ${ZeroMQ_LIBRARY}
-#   ${PCL_LIBRARIES}
-#   ${EIGEN3_LIBS}
-
-# )
-
-
-# add_executable(calibration ${SOURCES3})
-
-# target_include_directories(calibration
-#   PUBLIC ${ZeroMQ_INCLUDE_DIR}
-# )
-
-# target_link_libraries(calibration
-#   ${OpenCV_LIBS}
-#   ${realsense2_LIBRARY}
-#   realsense2::realsense2
-#   ${X11_LIBRARIES}
-#   dl
-#   ${ZeroMQ_LIBRARY}
-#   ${PCL_LIBRARIES}
-#   ${EIGEN3_LIBS}
-
-# )
-
-
-add_executable(ivero_pcl ${SOURCES4})
-
-target_include_directories(ivero_pcl
-  PUBLIC ${ZeroMQ_INCLUDE_DIR}
-)
-
-target_link_libraries(ivero_pcl
-  ${OpenCV_LIBS}
-  ${realsense2_LIBRARY}
-  realsense2::realsense2
-  ${X11_LIBRARIES}
-  dl
   nlohmann_json::nlohmann_json
+  ${OpenCV_LIBS}
+  ${realsense2_LIBRARY}
+  ${X11_LIBRARIES}
   ${ZeroMQ_LIBRARY}
   ${PCL_LIBRARIES}
   ${EIGEN3_LIBS}
-
 )
-
-
-
 
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_OPTIONS "-std=c++17")
 
