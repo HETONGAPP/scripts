@@ -107,11 +107,17 @@ int main() {
   zmq::context_t context(1);
   zmq::socket_t publisher(context, ZMQ_PUB);
   publisher.bind("tcp://*:5558");
+
+  zmq::socket_t publisher1(context, ZMQ_PUB);
+  publisher1.bind("tcp://*:5555"); // Change the address as needed
   // Create a RealSense pipeline
   rs2::pipeline pipeline;
   rs2::config config;
-  config.enable_stream(rs2_stream::RS2_STREAM_DEPTH); // Enable depth stream
-  config.enable_stream(rs2_stream::RS2_STREAM_COLOR); // Enable color stream
+  config.enable_stream(rs2_stream::RS2_STREAM_DEPTH, 848, 480, RS2_FORMAT_ANY,
+                       30);
+
+  config.enable_stream(rs2_stream::RS2_STREAM_COLOR, 848, 480, RS2_FORMAT_BGR8,
+                       30);
   pipeline.start(config);
 
   // Create a container for the point cloud
@@ -132,6 +138,14 @@ int main() {
       std::cerr << "Invalid frames received" << std::endl;
       continue;
     }
+
+    cv::Mat frame(cv::Size(848, 480), CV_8UC3, (void *)color_frame.get_data(),
+                  cv::Mat::AUTO_STEP);
+
+    // Serialize the OpenCV image and publish it via ZeroMQ
+    zmq::message_t zmq_msg1(frame.total() * frame.elemSize());
+    std::memcpy(zmq_msg1.data(), frame.data, zmq_msg1.size());
+    publisher1.send(zmq_msg1, zmq::send_flags::none);
 
     rs2::pointcloud pc;
     pc.map_to(color_frame);
@@ -186,7 +200,7 @@ int main() {
       json_obj.push_back(point_obj);
     }
     std::string json_str = json_obj.dump();
-    std::cout << json_str << std::endl;
+    // std::cout << json_str << std::endl;
     zmq::message_t message(json_str.size());
     memcpy(message.data(), json_str.data(), json_str.size());
     publisher.send(message);
