@@ -72,5 +72,21 @@ target_link_libraries(${PROJECT_NAME}
   ${EIGEN3_LIBS}
 )
 
+add_executable(calibration src/calibration.cpp)
+
+target_include_directories(calibration
+  PUBLIC ${ZeroMQ_INCLUDE_DIR}
+)
+
+target_link_libraries(calibration
+  realsense2::realsense2
+  dl 
+  ${OpenCV_LIBS}
+  ${realsense2_LIBRARY}
+  ${X11_LIBRARIES}
+  ${ZeroMQ_LIBRARY}
+  ${EIGEN3_LIBS}
+)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES COMPILE_OPTIONS "-std=c++17")
 
